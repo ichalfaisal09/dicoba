@@ -1,5 +1,9 @@
 <?php
 
+use App\Livewire\Admin\Kategorisasi\Materi\Create as MateriCreate;
+use App\Livewire\Admin\Kategorisasi\Materi\Index as MateriIndex;
+use App\Livewire\Admin\Kategorisasi\Variasi\Create as VariasiCreate;
+use App\Livewire\Admin\Kategorisasi\Variasi\Index as VariasiIndex;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -34,21 +38,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware(['auth', 'verified'])
         ->name('admin.kategorisasi.subtes.create');
 
-    Route::get('admin/kategorisasi/materi', function () {
-        $user = request()->user();
+    Route::get('admin/kategorisasi/materi', MateriIndex::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.kategorisasi.materi');
 
-        abort_unless($user->roles()->where('nama', 'admin')->exists(), 403);
+    Route::get('admin/kategorisasi/materi/create', MateriCreate::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.kategorisasi.materi.create');
 
-        return view('livewire.admin.kategorisasi.materi.list');
-    })->name('admin.kategorisasi.materi');
+    Route::get('admin/kategorisasi/variasi', VariasiIndex::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.kategorisasi.variasi');
 
-    Route::get('admin/kategorisasi/variasi', function () {
-        $user = request()->user();
-
-        abort_unless($user->roles()->where('nama', 'admin')->exists(), 403);
-
-        return view('livewire.admin.kategorisasi.variasi.list');
-    })->name('admin.kategorisasi.variasi');
+    Route::get('admin/kategorisasi/variasi/create', VariasiCreate::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.kategorisasi.variasi.create');
 });
 
 Route::middleware(['auth'])->group(function () {

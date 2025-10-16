@@ -27,13 +27,13 @@
                 @if ($isAdmin)
                     <flux:sidebar.group expandable heading="Kategorisasi" class="grid">
                         <flux:sidebar.item icon="clipboard-document-list" :href="route('admin.kategorisasi.subtes')"
-                            :current="request()->routeIs('admin.kategorisasi.subtes')" wire:navigate>Subtes
+                            :current="request()->routeIs('admin.kategorisasi.subtes*')" wire:navigate>Subtes
                         </flux:sidebar.item>
                         <flux:sidebar.item icon="book-open-text" :href="route('admin.kategorisasi.materi')"
-                            :current="request()->routeIs('admin.kategorisasi.materi')" wire:navigate>Materi
+                            :current="request()->routeIs('admin.kategorisasi.materi*')" wire:navigate>Materi
                         </flux:sidebar.item>
                         <flux:sidebar.item icon="variable" :href="route('admin.kategorisasi.variasi')"
-                            :current="request()->routeIs('admin.kategorisasi.variasi')" wire:navigate>Variasi
+                            :current="request()->routeIs('admin.kategorisasi.variasi*')" wire:navigate>Variasi
                         </flux:sidebar.item>
                     </flux:sidebar.group>
 
@@ -144,7 +144,8 @@
                 <flux:menu.separator />
 
                 <flux:menu.radio.group>
-                    <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}
+                    <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
+                        {{ __('Settings') }}
                     </flux:menu.item>
                 </flux:menu.radio.group>
 
