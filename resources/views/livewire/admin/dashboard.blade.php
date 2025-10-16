@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('Da1shboard')">
+<x-layouts.app :title="__('Dashboard')">
     @if ($callout = session('callout'))
         <flux:callout :icon="$callout['icon'] ?? 'bell'" :variant="$callout['variant'] ?? 'secondary'" class="mb-4"
             inline x-data="{ visible: true }" x-show="visible">
