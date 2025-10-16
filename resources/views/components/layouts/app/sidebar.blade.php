@@ -7,6 +7,13 @@
 
 <body class="min-h-screen bg-white dark:bg-zinc-800">
     <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+        @php
+            $user = auth()->user();
+            $roles = $user?->roles ?? collect();
+            $isAdmin = $roles->contains('nama', 'admin');
+            $isPeserta = $roles->contains('nama', 'peserta');
+        @endphp
+
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
         <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
@@ -15,14 +22,37 @@
 
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Platform')" class="grid">
-                <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                    wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
+                    wire:navigate>{{ __('Dashboard') }}</flux:sidebar.item>
+                @if ($isAdmin)
+                    <flux:sidebar.group expandable heading="Kategorisasi" class="grid">
+                        <flux:sidebar.item icon="clipboard-document-list" href="#">Subtes</flux:sidebar.item>
+                        <flux:sidebar.item icon="book-open-text" href="#">Materi</flux:sidebar.item>
+                        <flux:sidebar.item icon="variable" href="#">Variasi</flux:sidebar.item>
+                    </flux:sidebar.group>
+
+                    <flux:sidebar.group expandable heading="Manajemen Soal" class="grid">
+                        <flux:sidebar.item icon="clipboard" href="#">Soal TWK</flux:sidebar.item>
+                        <flux:sidebar.item icon="puzzle-piece" href="#">Soal TIU</flux:sidebar.item>
+                        <flux:sidebar.item icon="light-bulb" href="#">Soal TKP</flux:sidebar.item>
+                    </flux:sidebar.group>
+
+                    <flux:sidebar.group expandable heading="Manajemen Tryout" class="grid">
+                        <flux:sidebar.item icon="queue-list" href="#">Paket</flux:sidebar.item>
+                    </flux:sidebar.group>
+                    <flux:sidebar.item icon="scale" href="#">Konfigurasi Penilaian</flux:sidebar.item>
+                @endif
+
+                @if ($isPeserta)
+                    <flux:sidebar.item icon="archive-box" href="#">Tryout Tersedia</flux:sidebar.item>
+                @endif
             </flux:navlist.group>
         </flux:navlist>
 
+
         <flux:spacer />
 
-        <flux:navlist variant="outline">
+        {{-- <flux:navlist variant="outline">
             <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit"
                 target="_blank">
                 {{ __('Repository') }}
@@ -32,7 +62,7 @@
                 target="_blank">
                 {{ __('Documentation') }}
             </flux:navlist.item>
-        </flux:navlist>
+        </flux:navlist> --}}
 
         <!-- Desktop User Menu -->
         <flux:dropdown class="hidden lg:block" position="bottom" align="start">
