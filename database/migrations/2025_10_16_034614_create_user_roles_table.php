@@ -11,9 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Pivot table for users ↔ roles
         Schema::create('user_roles', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('role_id');
+
+            // Composite primary key to prevent duplicates
+            $table->primary(['user_id', 'role_id']);
+
+            // Foreign keys
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('role_id')->references('id')->on('roles')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
