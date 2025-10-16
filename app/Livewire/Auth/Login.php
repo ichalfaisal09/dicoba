@@ -49,6 +49,13 @@ class Login extends Component
 
         Auth::login($user, $this->remember);
 
+        session()->flash('callout', [
+            'variant' => 'secondary',
+            'icon' => 'bell',
+            'heading' => 'Berhasil masuk',
+            'text' => 'Senang ketemu lagi! Kamu berhasil login.',
+        ]);
+
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 

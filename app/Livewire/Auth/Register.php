@@ -51,6 +51,13 @@ class Register extends Component
             $user->roles()->sync([$peserta->id]);
         }
 
+        session()->flash('callout', [
+            'variant' => 'secondary',
+            'icon' => 'bell',
+            'heading' => 'Registrasi berhasil',
+            'text' => 'Selamat datang! Akun kamu sudah siap dipakai.',
+        ]);
+
         Auth::login($user);
 
         Session::regenerate();
