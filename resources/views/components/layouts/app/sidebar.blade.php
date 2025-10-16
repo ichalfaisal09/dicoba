@@ -26,9 +26,15 @@
                     wire:navigate>{{ __('Dashboard') }}</flux:sidebar.item>
                 @if ($isAdmin)
                     <flux:sidebar.group expandable heading="Kategorisasi" class="grid">
-                        <flux:sidebar.item icon="clipboard-document-list" href="#">Subtes</flux:sidebar.item>
-                        <flux:sidebar.item icon="book-open-text" href="#">Materi</flux:sidebar.item>
-                        <flux:sidebar.item icon="variable" href="#">Variasi</flux:sidebar.item>
+                        <flux:sidebar.item icon="clipboard-document-list" :href="route('admin.kategorisasi.subtes')"
+                            :current="request()->routeIs('admin.kategorisasi.subtes')" wire:navigate>Subtes
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="book-open-text" :href="route('admin.kategorisasi.materi')"
+                            :current="request()->routeIs('admin.kategorisasi.materi')" wire:navigate>Materi
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="variable" :href="route('admin.kategorisasi.variasi')"
+                            :current="request()->routeIs('admin.kategorisasi.variasi')" wire:navigate>Variasi
+                        </flux:sidebar.item>
                     </flux:sidebar.group>
 
                     <flux:sidebar.group expandable heading="Manajemen Soal" class="grid">
