@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,22 @@ class Register extends Component
         ]);
 
         event(new Registered(($user = User::create($validated))));
+
+        $admin = Role::query()->firstOrCreate(
+            ['nama' => 'admin'],
+            ['deskripsi' => 'Administrator sistem']
+        );
+
+        $peserta = Role::query()->firstOrCreate(
+            ['nama' => 'peserta'],
+            ['deskripsi' => 'Peserta ujian tryout CPNS']
+        );
+
+        if ($user->id === 1) {
+            $user->roles()->sync([$admin->id]);
+        } else {
+            $user->roles()->sync([$peserta->id]);
+        }
 
         Auth::login($user);
 
