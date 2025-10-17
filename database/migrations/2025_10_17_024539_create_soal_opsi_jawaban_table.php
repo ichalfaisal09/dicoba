@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('soal_opsi_jawaban', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('soal_id')->constrained('soal_pertanyaan')->cascadeOnUpdate()->restrictOnDelete();
-            $table->enum('huruf', ['A', 'B', 'C', 'D', 'E']);
-            $table->unsignedTinyInteger('urutan');
+            $table->foreignId('soal_id')
+                ->constrained('soal_pertanyaan')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+            $table->char('huruf_opsi', 1);
             $table->text('teks_opsi');
-            $table->decimal('bobot_opsi', 8, 2)->default(0);
+            $table->decimal('skor_opsi', 5, 2)->default(0);
             $table->timestamps();
-            $table->softDeletes();
+
+            $table->unique(['soal_id', 'huruf_opsi']);
         });
     }
 

@@ -6,6 +6,8 @@ use App\Livewire\Admin\Kategorisasi\Variasi\Create as VariasiCreate;
 use App\Livewire\Admin\Kategorisasi\Variasi\Index as VariasiIndex;
 use App\Livewire\Admin\Konfigurasi\Create as KonfigurasiCreate;
 use App\Livewire\Admin\Konfigurasi\Index as KonfigurasiIndex;
+use App\Livewire\Admin\ManajemenSoal\Twk\CreateTwk;
+use App\Livewire\Admin\ManajemenSoal\Twk\ListTwk;
 use App\Livewire\Admin\ManajemenTryout\Paket\Create as PaketCreate;
 use App\Livewire\Admin\ManajemenTryout\Paket\Index as PaketIndex;
 use App\Livewire\Settings\Appearance;
@@ -73,6 +75,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('admin/manajemen-tryout/paket/create', PaketCreate::class)
         ->middleware(['auth', 'verified'])
         ->name('admin.manajemen-tryout.paket.create');
+
+    Route::get('admin/manajemen-soal/twk', ListTwk::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-soal.twk');
+
+    Route::get('admin/manajemen-soal/twk/create', CreateTwk::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-soal.twk.create');
 });
 
 Route::middleware(['auth'])->group(function () {

@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('soal_pertanyaan', function (Blueprint $table) {
             $table->id();
-            $table->string('kode')->unique();
-            $table->foreignId('variasi_id')->constrained('kategori_variasi')->cascadeOnUpdate()->restrictOnDelete();
-            $table->text('teks_pertanyaan');
-            $table->enum('kesulitan', ['mudah', 'sedang', 'sulit'])->default('sedang')->index();
-            $table->enum('is_aktif', ['aktif', 'nonaktif'])->default('aktif')->index();
+            $table->foreignId('variasi_id')
+                ->constrained('kategori_variasi')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+            $table->string('kode_soal')->unique();
+            $table->text('teks_soal');
+            $table->enum('tingkat_kesulitan', ['mudah', 'sedang', 'sulit'])->default('sedang')->index();
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif')->index();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

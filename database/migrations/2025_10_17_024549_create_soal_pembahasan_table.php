@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('soal_pembahasan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('soal_id')->constrained('soal_pertanyaan')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreignId('soal_id')
+                ->constrained('soal_pertanyaan')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->text('teks_pembahasan')->nullable();
             $table->string('referensi')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

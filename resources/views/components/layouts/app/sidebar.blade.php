@@ -38,18 +38,21 @@
                     </flux:sidebar.group>
 
                     <flux:sidebar.group expandable heading="Manajemen Soal" class="grid">
-                        <flux:sidebar.item icon="clipboard" href="#">Soal TWK</flux:sidebar.item>
+                        <flux:sidebar.item icon="clipboard" :href="route('admin.manajemen-soal.twk')"
+                            :current="request()->routeIs('admin.manajemen-soal.twk*')" wire:navigate>
+                            Soal TWK
+                        </flux:sidebar.item>
                         <flux:sidebar.item icon="puzzle-piece" href="#">Soal TIU</flux:sidebar.item>
                         <flux:sidebar.item icon="light-bulb" href="#">Soal TKP</flux:sidebar.item>
                     </flux:sidebar.group>
 
                     <flux:sidebar.group expandable heading="Manajemen Tryout" class="grid">
                         <flux:sidebar.item icon="queue-list" :href="route('admin.manajemen-tryout.paket')"
-                            :current="request()->routeIs('admin.manajemen-tryout.paket')" wire:navigate>Paket
+                            :current="request()->routeIs('admin.manajemen-tryout.paket*')" wire:navigate>Paket
                         </flux:sidebar.item>
                     </flux:sidebar.group>
                     <flux:sidebar.item icon="cog" :href="route('admin.konfigurasi')"
-                        :current="request()->routeIs('admin.konfigurasi')" wire:navigate>Konfigurasi Dasar Sistem
+                        :current="request()->routeIs('admin.konfigurasi*')" wire:navigate>Konfigurasi Dasar Sistem
                     </flux:sidebar.item>
                 @endif
 
