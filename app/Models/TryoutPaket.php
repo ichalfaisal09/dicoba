@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class TryoutPaket extends Model
 {
@@ -13,7 +13,6 @@ class TryoutPaket extends Model
     protected $table = 'tryout_paket';
 
     protected $fillable = [
-        'konfigurasi_dasar_sistem_id',
         'nama',
         'waktu_pengerjaan',
         'harga',
@@ -25,8 +24,11 @@ class TryoutPaket extends Model
         'harga' => 'integer',
     ];
 
-    public function konfigurasi(): BelongsTo
+    public function konfigurasiDasar(): BelongsToMany
     {
-        return $this->belongsTo(KonfigurasiDasarSistem::class, 'konfigurasi_dasar_sistem_id');
+        return $this->belongsToMany(KonfigurasiDasarSistem::class, 'konfigurasi_ke_tryout', 'tryout_paket_id', 'konfigurasi_dasar_sistem_id')
+            ->withPivot('urutan')
+            ->withTimestamps()
+            ->orderBy('konfigurasi_ke_tryout.urutan');
     }
 }

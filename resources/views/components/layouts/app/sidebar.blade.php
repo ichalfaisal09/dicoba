@@ -44,9 +44,13 @@
                     </flux:sidebar.group>
 
                     <flux:sidebar.group expandable heading="Manajemen Tryout" class="grid">
-                        <flux:sidebar.item icon="queue-list" href="#">Paket</flux:sidebar.item>
+                        <flux:sidebar.item icon="queue-list" :href="route('admin.manajemen-tryout.paket')"
+                            :current="request()->routeIs('admin.manajemen-tryout.paket')" wire:navigate>Paket
+                        </flux:sidebar.item>
                     </flux:sidebar.group>
-                    <flux:sidebar.item icon="scale" href="#">Konfigurasi Dasar Sistem</flux:sidebar.item>
+                    <flux:sidebar.item icon="cog" :href="route('admin.konfigurasi')"
+                        :current="request()->routeIs('admin.konfigurasi')" wire:navigate>Konfigurasi Dasar Sistem
+                    </flux:sidebar.item>
                 @endif
 
                 @if ($isPeserta)

@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('tryout_paket', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->foreignId('konfigurasi_dasar_sistem_id')->constrained('konfigurasi_dasar_sistem')->cascadeOnUpdate()->restrictOnDelete();
             $table->unsignedInteger('waktu_pengerjaan');
-            $table->unsignedInteger('harga');
+            $table->unsignedInteger('harga')->default(0);
             $table->enum('is_aktif', ['aktif', 'nonaktif'])->default('aktif')->index();
             $table->timestamps();
         });

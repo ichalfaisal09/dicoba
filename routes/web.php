@@ -4,6 +4,10 @@ use App\Livewire\Admin\Kategorisasi\Materi\Create as MateriCreate;
 use App\Livewire\Admin\Kategorisasi\Materi\Index as MateriIndex;
 use App\Livewire\Admin\Kategorisasi\Variasi\Create as VariasiCreate;
 use App\Livewire\Admin\Kategorisasi\Variasi\Index as VariasiIndex;
+use App\Livewire\Admin\Konfigurasi\Create as KonfigurasiCreate;
+use App\Livewire\Admin\Konfigurasi\Index as KonfigurasiIndex;
+use App\Livewire\Admin\ManajemenTryout\Paket\Create as PaketCreate;
+use App\Livewire\Admin\ManajemenTryout\Paket\Index as PaketIndex;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -53,6 +57,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('admin/kategorisasi/variasi/create', VariasiCreate::class)
         ->middleware(['auth', 'verified'])
         ->name('admin.kategorisasi.variasi.create');
+
+    Route::get('admin/konfigurasi', KonfigurasiIndex::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.konfigurasi');
+
+    Route::get('admin/konfigurasi/create', KonfigurasiCreate::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.konfigurasi.create');
+
+    Route::get('admin/manajemen-tryout/paket', PaketIndex::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-tryout.paket');
+
+    Route::get('admin/manajemen-tryout/paket/create', PaketCreate::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-tryout.paket.create');
 });
 
 Route::middleware(['auth'])->group(function () {

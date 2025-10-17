@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class KonfigurasiDasarSistem extends Model
 {
@@ -26,8 +26,10 @@ class KonfigurasiDasarSistem extends Model
         return $this->belongsTo(KategoriSubtes::class, 'subtes_id');
     }
 
-    public function paket(): HasMany
+    public function paket(): BelongsToMany
     {
-        return $this->hasMany(TryoutPaket::class, 'konfigurasi_dasar_sistem_id');
+        return $this->belongsToMany(TryoutPaket::class, 'konfigurasi_ke_tryout', 'konfigurasi_dasar_sistem_id', 'tryout_paket_id')
+            ->withPivot('urutan')
+            ->withTimestamps();
     }
 }
