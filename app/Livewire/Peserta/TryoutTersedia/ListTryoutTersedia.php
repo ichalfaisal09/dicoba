@@ -238,6 +238,7 @@ class ListTryoutTersedia extends Component
 
                 return [
                     'id' => $paket->id,
+                    'booking_id' => $booking?->id,
                     'nama' => $paket->nama,
                     'deskripsi' => $paket->deskripsi ?? __('Belum ada deskripsi paket.'),
                     'harga' => $paket->harga,

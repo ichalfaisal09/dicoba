@@ -6,9 +6,29 @@
         </flux:text>
     </div>
 
-    @if ($bookings)
+    <flux:card class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div class="grid w-full gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,200px)]">
+            <flux:input icon="magnifying-glass" placeholder="{{ __('Cari nama paket tryout') }}" wire:model.live.debounce.400ms="search" />
+
+            <flux:select placeholder="{{ __('Semua Status') }}" wire:model.live="filterStatus">
+                <flux:select.option value="all">{{ __('Semua Status') }}</flux:select.option>
+                <flux:select.option value="pending">{{ __('Menunggu konfirmasi') }}</flux:select.option>
+                <flux:select.option value="active">{{ __('Sedang berlangsung') }}</flux:select.option>
+                <flux:select.option value="completed">{{ __('Selesai') }}</flux:select.option>
+                <flux:select.option value="expired">{{ __('Kedaluwarsa') }}</flux:select.option>
+            </flux:select>
+        </div>
+
+        <div class="flex gap-3">
+            <flux:button variant="ghost" icon="arrow-path" wire:click="refreshBookings" wire:loading.attr="disabled">
+                {{ __('Segarkan') }}
+            </flux:button>
+        </div>
+    </flux:card>
+
+    @if ($filteredBookings)
         <div class="grid gap-4 lg:grid-cols-2">
-            @foreach ($bookings as $booking)
+            @foreach ($filteredBookings as $booking)
                 <flux:card class="flex h-full flex-col justify-between">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
@@ -60,12 +80,39 @@
                     </div>
 
                     <div class="mt-6 flex flex-col gap-3">
-                        <flux:button variant="ghost" icon="eye" :href="route('peserta.tryout.detail', $booking['paket']['id'])" wire:navigate>
-                            {{ __('Lihat Detail Tryout') }}
-                        </flux:button>
+                        @if ($booking['status'] === \App\Models\TryoutBooking::STATUS_ACTIVE)
+                            <flux:button icon="play" :href="route('peserta.tryout.detail', $booking['paket']['id'])" wire:navigate>
+                                {{ __('Mulai Ujian') }}
+                            </flux:button>
+                            <flux:button variant="outline" icon="arrow-path" :href="route('peserta.tryout.detail', $booking['paket']['id'])" wire:navigate>
+                                {{ __('Lanjutkan Tryout') }}
+                            </flux:button>
+                            <flux:button variant="ghost" icon="eye" :href="route('peserta.tryout.detail', $booking['paket']['id'])" wire:navigate>
+                                {{ __('Lihat Detail Tryout') }}
+                            </flux:button>
+                        @elseif ($booking['status'] === \App\Models\TryoutBooking::STATUS_COMPLETED)
+                            <flux:button icon="chart-bar" :href="route('peserta.tryout.hasil', $booking['id'])" wire:navigate>
+                                {{ __('Lihat Hasil & Pembahasan') }}
+                            </flux:button>
+                        @else
+                            <flux:button variant="ghost" icon="eye" :href="route('peserta.tryout.detail', $booking['paket']['id'])" wire:navigate>
+                                {{ __('Lihat Detail Tryout') }}
+                            </flux:button>
+                        @endif
                     </div>
                 </flux:card>
             @endforeach
+        </div>
+    @elseif ($bookings)
+        <div class="rounded-2xl border border-dashed border-amber-200 bg-amber-50 p-12 text-center dark:border-amber-500/40 dark:bg-amber-900/20">
+            <flux:icon name="magnifying-glass" class="mx-auto size-10 text-amber-500" />
+            <flux:heading size="lg" class="mt-4">{{ __('Tidak ada tryout yang cocok') }}</flux:heading>
+            <flux:text variant="muted" class="mt-2">
+                {{ __('Coba ubah kata kunci pencarian atau pilih status lain untuk melihat daftar tryout yang sesuai.') }}
+            </flux:text>
+            <flux:button class="mt-6" icon="adjustments-horizontal" wire:click="refreshBookings">
+                {{ __('Reset Filter') }}
+            </flux:button>
         </div>
     @else
         <div class="rounded-2xl border border-dashed border-zinc-200 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-900">

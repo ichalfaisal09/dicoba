@@ -102,12 +102,21 @@
                 @endif
 
                 <div class="mt-6 flex flex-col gap-3">
-                    <flux:button icon="arrow-uturn-left" :href="route('peserta.tryout-tersedia')" wire:navigate>
-                        {{ __('Kembali ke Daftar Tryout') }}
-                    </flux:button>
-                    <flux:button variant="ghost" icon="chat-bubble-bottom-center-text">
-                        {{ __('Diskusi dengan Mentor') }}
-                    </flux:button>
+                    @if ($booking && $booking->status === \App\Models\TryoutBooking::STATUS_ACTIVE)
+                        <flux:button icon="play" :href="route('peserta.tryout.detail', $paket->id)" wire:navigate>
+                            {{ __('Mulai Ujian') }}
+                        </flux:button>
+                        <flux:button variant="ghost" icon="arrow-uturn-left" :href="route('peserta.tryout-tersedia')" wire:navigate>
+                            {{ __('Kembali ke Daftar Tryout') }}
+                        </flux:button>
+                    @else
+                        <flux:button icon="arrow-uturn-left" :href="route('peserta.tryout-tersedia')" wire:navigate>
+                            {{ __('Kembali ke Daftar Tryout') }}
+                        </flux:button>
+                        <flux:button variant="ghost" icon="chat-bubble-bottom-center-text">
+                            {{ __('Diskusi dengan Mentor') }}
+                        </flux:button>
+                    @endif
                 </div>
             </flux:card>
         </div>

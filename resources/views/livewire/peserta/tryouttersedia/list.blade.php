@@ -186,10 +186,16 @@
                     </div>
 
                     <div class="mt-6 flex flex-col gap-3">
-                        <flux:button icon="sparkles" block wire:click="confirmRegister({{ $item['id'] }})"
-                            wire:loading.attr="disabled" :disabled="! $item['can_register']">
-                            {{ $item['can_register'] ? __('Ikuti Sekarang') : __('Sedang Diproses') }}
-                        </flux:button>
+                        @if ($item['booking_status'] === \App\Models\TryoutBooking::STATUS_ACTIVE)
+                            <flux:button icon="play" block :href="route('peserta.tryout.detail', $item['id'])" wire:navigate>
+                                {{ __('Mulai Ujian') }}
+                            </flux:button>
+                        @else
+                            <flux:button icon="sparkles" block wire:click="confirmRegister({{ $item['id'] }})"
+                                wire:loading.attr="disabled" :disabled="! $item['can_register']">
+                                {{ $item['can_register'] ? __('Ikuti Sekarang') : __('Sedang Diproses') }}
+                            </flux:button>
+                        @endif
 
                         <flux:button variant="ghost" icon="eye" block :href="route('peserta.tryout.detail', $item['id'])" wire:navigate>
                             {{ __('Lihat Detail Paket') }}
