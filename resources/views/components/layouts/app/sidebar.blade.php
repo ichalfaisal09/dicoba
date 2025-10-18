@@ -67,9 +67,11 @@
                 @endif
 
                 @if ($isPeserta)
-                    <flux:sidebar.item icon="archive-box" :href="route('peserta.tryout-tersedia')"
-                        :current="request()->routeIs('peserta.tryout-tersedia')" wire:navigate>
-                        Tryout Tersedia
+                    <flux:sidebar.item href="{{ route('peserta.tryout-tersedia') }}" icon="sparkles" wire:navigate>
+                        {{ __('Tryout Tersedia') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item href="{{ route('peserta.tryout-saya') }}" icon="check-badge" wire:navigate>
+                        {{ __('Tryout Saya') }}
                     </flux:sidebar.item>
                 @endif
             </flux:navlist.group>

@@ -18,6 +18,7 @@ use App\Livewire\Admin\ManajemenSoal\Twk\ListTwk;
 use App\Livewire\GeneratorJson;
 use App\Livewire\Peserta\TryoutTersedia\ListTryoutTersedia;
 use App\Livewire\Peserta\TryoutTersedia\DetailTryout;
+use App\Livewire\Peserta\TryoutSaya\ListTryoutSaya;
 use App\Livewire\Admin\ManajemenTryout\Paket\Create as PaketCreate;
 use App\Livewire\Admin\ManajemenTryout\Paket\Index as PaketIndex;
 use App\Livewire\Settings\Appearance;
@@ -153,6 +154,10 @@ Route::middleware(['auth'])->group(function () {
         ->whereNumber('paketId')
         ->middleware(['verified'])
         ->name('peserta.tryout.detail');
+
+    Route::get('peserta/tryout-saya', ListTryoutSaya::class)
+        ->middleware(['verified'])
+        ->name('peserta.tryout-saya');
 });
 
 require __DIR__.'/auth.php';
