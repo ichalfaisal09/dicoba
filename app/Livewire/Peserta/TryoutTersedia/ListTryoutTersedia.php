@@ -16,6 +16,10 @@ class ListTryoutTersedia extends Component
 
     public array $statistik = [];
 
+    public bool $konfirmasiModal = false;
+
+    public array $paketKonfirmasi = [];
+
     public function mount(): void
     {
         abort_unless(
@@ -33,7 +37,7 @@ class ListTryoutTersedia extends Component
         ]);
     }
 
-    public function register(int $paketId): void
+    public function confirmRegister(int $paketId): void
     {
         $user = Auth::user();
 
@@ -79,6 +83,87 @@ class ListTryoutTersedia extends Component
             return;
         }
 
+        $this->paketKonfirmasi = [
+            'id' => $paket->id,
+            'nama' => $paket->nama,
+            'deskripsi' => $paket->deskripsi ?? __('Belum ada deskripsi paket.'),
+            'harga' => $paket->harga,
+            'waktu_pengerjaan' => $paket->waktu_pengerjaan,
+            'status' => $existing?->status,
+        ];
+
+        $this->konfirmasiModal = true;
+    }
+
+    public function registerConfirmed(): void
+    {
+        if (! $this->paketKonfirmasi) {
+            return;
+        }
+
+        $paketId = $this->paketKonfirmasi['id'];
+
+        $this->konfirmasiModal = false;
+
+        $this->register($paketId);
+
+        $this->paketKonfirmasi = [];
+    }
+
+    public function cancelRegister(): void
+    {
+        $this->konfirmasiModal = false;
+        $this->paketKonfirmasi = [];
+    }
+
+    public function register(int $paketId): void
+    {
+        $user = Auth::user();
+
+        if (! $user) {
+            $this->redirectRoute('login');
+
+            return;
+        }
+
+        $paket = TryoutPaket::query()
+            ->where('is_aktif', 'aktif')
+            ->find($paketId);
+
+        if (! $paket) {
+            session()->flash('callout', [
+                'icon' => 'exclamation-circle',
+                'variant' => 'danger',
+                'heading' => __('Paket tidak ditemukan'),
+                'text' => __('Paket tryout yang kamu pilih tidak tersedia atau sudah nonaktif.'),
+            ]);
+
+            return;
+        }
+
+        $existing = $user->tryoutBookings()
+            ->where('tryout_paket_id', $paketId)
+            ->first();
+
+        if ($existing && in_array($existing->status, [
+            TryoutBooking::STATUS_PENDING,
+            TryoutBooking::STATUS_ACTIVE,
+        ], true)) {
+            session()->flash('callout', [
+                'icon' => 'information-circle',
+                'variant' => 'warning',
+                'heading' => __('Kamu sudah terdaftar'),
+                'text' => __('Paket :nama sedang dalam status :status.', [
+                    'nama' => $paket->nama,
+                    'status' => __($existing->status),
+                ]),
+            ]);
+
+            $this->konfirmasiModal = false;
+
+            return;
+        }
+
         $payload = [
             'status' => TryoutBooking::STATUS_PENDING,
             'tanggal_mulai' => now(),
@@ -116,6 +201,9 @@ class ListTryoutTersedia extends Component
         }
 
         $this->loadPaket();
+
+        $this->konfirmasiModal = false;
+        $this->paketKonfirmasi = [];
     }
 
     protected function loadPaket(): void
