@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\ManajemenSoal\Twk;
+namespace App\Livewire\Admin\ManajemenSoal\Tkp;
 
 use App\Models\SoalPertanyaan;
 use Illuminate\Support\Facades\Auth;
@@ -9,7 +9,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
-class ListTwk extends Component
+class ListTkp extends Component
 {
     use WithPagination;
 
@@ -31,14 +31,14 @@ class ListTwk extends Component
     public function render()
     {
         $soal = SoalPertanyaan::query()
-            ->whereHas('variasi.materi.subtes', fn ($query) => $query->where('kode', 'TWK'))
+            ->whereHas('variasi.materi.subtes', fn ($query) => $query->where('kode', 'TKP'))
             ->orderBy('kode_soal')
             ->paginate(10);
 
-        return view('livewire.admin.manajemensoal.twk.list', [
+        return view('livewire.admin.manajemensoal.tkp.list', [
             'soal' => $soal,
         ])->layoutData([
-            'title' => __('Manajemen Soal TWK'),
+            'title' => __('Manajemen Soal TKP'),
         ]);
     }
 
@@ -48,7 +48,7 @@ class ListTwk extends Component
             'icon' => 'information-circle',
             'variant' => 'warning',
             'heading' => __('Fitur belum tersedia'),
-            'text' => __('Hapus soal TWK akan tersedia setelah modul pengelolaan lanjutan selesai.'),
+            'text' => __('Hapus soal TKP akan tersedia setelah modul pengelolaan lanjutan selesai.'),
         ]);
     }
 }

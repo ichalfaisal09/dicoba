@@ -1,7 +1,7 @@
 <div class="flex h-full w-full flex-1 flex-col gap-6">
     @if ($callout = session('callout'))
-        <flux:callout :icon="$callout['icon'] ?? 'bell'" :variant="$callout['variant'] ?? 'secondary'" class="mb-4"
-            inline x-data="{ visible: true }" x-show="visible">
+        <flux:callout :icon="$callout['icon'] ?? 'bell'" :variant="trim($callout['variant'] ?? 'secondary')"
+            class="mb-4" inline x-data="{ visible: true }" x-show="visible">
             <flux:callout.heading class="flex gap-2 @max-md:flex-col items-start">
                 {{ $callout['heading'] ?? 'Informasi' }}
                 @if (!empty($callout['text']))
@@ -32,6 +32,10 @@
                 <flux:button icon="arrow-path" variant="ghost" wire:click="refresh" wire:loading.attr="disabled">
                     {{ __('Muat Ulang') }}
                 </flux:button>
+                <flux:button icon="arrow-up-tray" variant="ghost" :href="route('admin.manajemen-soal.twk.import')"
+                    wire:navigate>
+                    {{ __('Import JSON') }}
+                </flux:button>
                 <flux:button icon="plus" :href="route('admin.manajemen-soal.twk.create')" wire:navigate>
                     {{ __('Tambah Soal') }}
                 </flux:button>
@@ -52,6 +56,7 @@
                 <flux:table :paginate="$soal">
                     <flux:table.columns>
                         <flux:table.column variant="strong">{{ __('Teks Soal') }}</flux:table.column>
+                        <flux:table.column class="w-40 text-right">{{ __('Aksi') }}</flux:table.column>
                     </flux:table.columns>
 
                     <flux:table.rows>
@@ -59,6 +64,16 @@
                             <flux:table.row wire:key="soal-{{ $item->id }}">
                                 <flux:table.cell>
                                     <flux:text>{{ $item->teks_soal }}</flux:text>
+                                </flux:table.cell>
+                                <flux:table.cell class="flex justify-end gap-2">
+                                    <flux:button size="sm" variant="ghost" icon="eye"
+                                        :href="route('admin.manajemen-soal.twk') . '/show/' . $item->id" wire:navigate>
+                                        {{ __('Detail') }}
+                                    </flux:button>
+                                    <flux:button size="sm" variant="danger" icon="trash"
+                                        wire:click="confirmDeletion({{ $item->id }})" wire:loading.attr="disabled">
+                                        {{ __('Hapus') }}
+                                    </flux:button>
                                 </flux:table.cell>
                             </flux:table.row>
                         @endforeach

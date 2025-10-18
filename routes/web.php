@@ -6,8 +6,16 @@ use App\Livewire\Admin\Kategorisasi\Variasi\Create as VariasiCreate;
 use App\Livewire\Admin\Kategorisasi\Variasi\Index as VariasiIndex;
 use App\Livewire\Admin\Konfigurasi\Create as KonfigurasiCreate;
 use App\Livewire\Admin\Konfigurasi\Index as KonfigurasiIndex;
+use App\Livewire\Admin\ManajemenSoal\Tiu\CreateTiu;
+use App\Livewire\Admin\ManajemenSoal\Tiu\ImportTiu;
+use App\Livewire\Admin\ManajemenSoal\Tiu\ListTiu;
+use App\Livewire\Admin\ManajemenSoal\Tkp\CreateTkp;
+use App\Livewire\Admin\ManajemenSoal\Tkp\ImportTkp;
+use App\Livewire\Admin\ManajemenSoal\Tkp\ListTkp;
+use App\Livewire\Admin\ManajemenSoal\Twk\ImportTwk;
 use App\Livewire\Admin\ManajemenSoal\Twk\CreateTwk;
 use App\Livewire\Admin\ManajemenSoal\Twk\ListTwk;
+use App\Livewire\GeneratorJson;
 use App\Livewire\Admin\ManajemenTryout\Paket\Create as PaketCreate;
 use App\Livewire\Admin\ManajemenTryout\Paket\Index as PaketIndex;
 use App\Livewire\Settings\Appearance;
@@ -83,6 +91,38 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('admin/manajemen-soal/twk/create', CreateTwk::class)
         ->middleware(['auth', 'verified'])
         ->name('admin.manajemen-soal.twk.create');
+
+    Route::get('admin/manajemen-soal/twk/import', ImportTwk::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-soal.twk.import');
+
+    Route::get('admin/manajemen-soal/tiu', ListTiu::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-soal.tiu');
+
+    Route::get('admin/manajemen-soal/tiu/create', CreateTiu::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-soal.tiu.create');
+
+    Route::get('admin/manajemen-soal/tiu/import', ImportTiu::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-soal.tiu.import');
+
+    Route::get('admin/manajemen-soal/tkp', ListTkp::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-soal.tkp');
+
+    Route::get('admin/manajemen-soal/tkp/create', CreateTkp::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-soal.tkp.create');
+
+    Route::get('admin/manajemen-soal/tkp/import', ImportTkp::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.manajemen-soal.tkp.import');
+
+    Route::get('admin/generator-json', GeneratorJson::class)
+        ->middleware(['auth', 'verified'])
+        ->name('admin.generator-json');
 });
 
 Route::middleware(['auth'])->group(function () {

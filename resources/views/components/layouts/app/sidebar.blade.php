@@ -42,8 +42,14 @@
                             :current="request()->routeIs('admin.manajemen-soal.twk*')" wire:navigate>
                             Soal TWK
                         </flux:sidebar.item>
-                        <flux:sidebar.item icon="puzzle-piece" href="#">Soal TIU</flux:sidebar.item>
-                        <flux:sidebar.item icon="light-bulb" href="#">Soal TKP</flux:sidebar.item>
+                        <flux:sidebar.item icon="puzzle-piece" :href="route('admin.manajemen-soal.tiu')"
+                            :current="request()->routeIs('admin.manajemen-soal.tiu*')" wire:navigate>
+                            Soal TIU
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="light-bulb" :href="route('admin.manajemen-soal.tkp')"
+                            :current="request()->routeIs('admin.manajemen-soal.tkp*')" wire:navigate>
+                            Soal TKP
+                        </flux:sidebar.item>
                     </flux:sidebar.group>
 
                     <flux:sidebar.group expandable heading="Manajemen Tryout" class="grid">
@@ -53,6 +59,10 @@
                     </flux:sidebar.group>
                     <flux:sidebar.item icon="cog" :href="route('admin.konfigurasi')"
                         :current="request()->routeIs('admin.konfigurasi*')" wire:navigate>Konfigurasi Dasar Sistem
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="code-bracket-square" :href="route('admin.generator-json')"
+                        :current="request()->routeIs('admin.generator-json')" wire:navigate>
+                        Generator Contoh JSON
                     </flux:sidebar.item>
                 @endif
 
