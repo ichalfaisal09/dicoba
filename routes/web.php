@@ -16,6 +16,7 @@ use App\Livewire\Admin\ManajemenSoal\Twk\ImportTwk;
 use App\Livewire\Admin\ManajemenSoal\Twk\CreateTwk;
 use App\Livewire\Admin\ManajemenSoal\Twk\ListTwk;
 use App\Livewire\GeneratorJson;
+use App\Livewire\Peserta\TryoutTersedia\ListTryoutTersedia;
 use App\Livewire\Admin\ManajemenTryout\Paket\Create as PaketCreate;
 use App\Livewire\Admin\ManajemenTryout\Paket\Index as PaketIndex;
 use App\Livewire\Settings\Appearance;
@@ -142,6 +143,10 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
+
+    Route::get('peserta/tryout-tersedia', ListTryoutTersedia::class)
+        ->middleware(['verified'])
+        ->name('peserta.tryout-tersedia');
 });
 
 require __DIR__.'/auth.php';
