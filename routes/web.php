@@ -20,6 +20,7 @@ use App\Livewire\Peserta\TryoutTersedia\ListTryoutTersedia;
 use App\Livewire\Peserta\TryoutTersedia\DetailTryout;
 use App\Livewire\Peserta\TryoutSaya\ListTryoutSaya;
 use App\Livewire\Peserta\TryoutSaya\HasilTryout;
+use App\Livewire\Peserta\TryoutUjian\Index as TryoutUjianIndex;
 use App\Livewire\Admin\ManajemenTryout\Paket\Create as PaketCreate;
 use App\Livewire\Admin\ManajemenTryout\Paket\Index as PaketIndex;
 use App\Livewire\Settings\Appearance;
@@ -164,6 +165,11 @@ Route::middleware(['auth'])->group(function () {
         ->whereNumber('bookingId')
         ->middleware(['verified'])
         ->name('peserta.tryout.hasil');
+
+    Route::get('peserta/tryout/booking/{bookingId}/ujian', TryoutUjianIndex::class)
+        ->whereNumber('bookingId')
+        ->middleware(['verified'])
+        ->name('peserta.tryout.ujian');
 });
 
 require __DIR__.'/auth.php';

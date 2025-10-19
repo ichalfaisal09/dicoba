@@ -165,10 +165,10 @@ class ListTryoutTersedia extends Component
         }
 
         $payload = [
-            'status' => TryoutBooking::STATUS_PENDING,
-            'tanggal_mulai' => now(),
-            'tanggal_selesai' => now()->addMinutes((int) $paket->waktu_pengerjaan),
-            'durasi_menit' => $paket->waktu_pengerjaan,
+            'status' => TryoutBooking::STATUS_ACTIVE,
+            'tanggal_mulai' => null,
+            'tanggal_selesai' => null,
+            'durasi_menit' => null,
             'harga' => $paket->harga,
             'kode_pembayaran' => sprintf('INV-%s-%s', now()->format('YmdHis'), str_pad((string) $user->id, 4, '0', STR_PAD_LEFT)),
             'metadata' => $existing?->metadata ?? [],

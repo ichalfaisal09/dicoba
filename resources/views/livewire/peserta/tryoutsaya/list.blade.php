@@ -50,16 +50,9 @@
 
                         <div class="grid gap-3 text-sm text-zinc-500 dark:text-zinc-300">
                             <div class="flex items-center gap-2">
-                                <flux:icon name="clock" class="size-4" />
-                                <span>{{ __('Mulai') }}:
-                                    <strong class="text-zinc-700 dark:text-white">{{ $booking['tanggal_mulai'] ?? __('Belum dijadwalkan') }}</strong>
-                                </span>
-                            </div>
-
-                            <div class="flex items-center gap-2">
-                                <flux:icon name="calendar" class="size-4" />
-                                <span>{{ __('Selesai') }}:
-                                    <strong class="text-zinc-700 dark:text-white">{{ $booking['tanggal_selesai'] ?? __('Belum dijadwalkan') }}</strong>
+                                <flux:icon name="calendar-days" class="size-4" />
+                                <span>{{ __('Terdaftar sejak') }}:
+                                    <strong class="text-zinc-700 dark:text-white">{{ $booking['terdaftar'] ?? __('-') }}</strong>
                                 </span>
                             </div>
 
@@ -81,12 +74,14 @@
 
                     <div class="mt-6 flex flex-col gap-3">
                         @if ($booking['status'] === \App\Models\TryoutBooking::STATUS_ACTIVE)
-                            <flux:button icon="play" :href="route('peserta.tryout.detail', $booking['paket']['id'])" wire:navigate>
+                            <flux:button icon="play" :href="route('peserta.tryout.ujian', $booking['id'])" wire:navigate>
                                 {{ __('Mulai Ujian') }}
                             </flux:button>
-                            <flux:button variant="outline" icon="arrow-path" :href="route('peserta.tryout.detail', $booking['paket']['id'])" wire:navigate>
-                                {{ __('Lanjutkan Tryout') }}
-                            </flux:button>
+                            @if ($booking['has_progress'])
+                                <flux:button variant="outline" icon="arrow-path" :href="route('peserta.tryout.detail', $booking['paket']['id'])" wire:navigate>
+                                    {{ __('Lanjutkan Tryout') }}
+                                </flux:button>
+                            @endif
                             <flux:button variant="ghost" icon="eye" :href="route('peserta.tryout.detail', $booking['paket']['id'])" wire:navigate>
                                 {{ __('Lihat Detail Tryout') }}
                             </flux:button>
@@ -116,7 +111,7 @@
         </div>
     @else
         <div class="rounded-2xl border border-dashed border-zinc-200 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-900">
-            <flux:icon name="calendar-x-mark" class="mx-auto size-10 text-zinc-400" />
+            <flux:icon name="calendar-days" class="mx-auto size-10 text-zinc-400" />
             <flux:heading size="lg" class="mt-4">{{ __('Belum ada tryout terdaftar') }}</flux:heading>
             <flux:text variant="muted" class="mt-2">
                 {{ __('Kamu belum mendaftarkan diri pada tryout mana pun. Kembali ke halaman Tryout Tersedia untuk memilih paket yang kamu inginkan.') }}

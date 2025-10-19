@@ -40,55 +40,60 @@
                     </flux:button>
                 </div>
 
-<flux:modal name="konfirmasi-daftar-tryout" class="max-w-xl" wire:model="konfirmasiModal" focusable>
-    <div class="space-y-6">
-        <div class="space-y-2">
-            <flux:heading size="lg">{{ __('Konfirmasi Pendaftaran Tryout') }}</flux:heading>
-            <flux:text variant="muted">
-                {{ __('Pastikan kamu sudah siap mengikuti tryout ini. Setelah mendaftar, status akan berubah menjadi pending dan timer akan dimulai sesuai jadwal.') }}
-            </flux:text>
-        </div>
+                <flux:modal name="konfirmasi-daftar-tryout" class="max-w-xl" wire:model="konfirmasiModal" focusable>
+                    <div class="space-y-6">
+                        <div class="space-y-2">
+                            <flux:heading size="lg">{{ __('Konfirmasi Pendaftaran Tryout') }}</flux:heading>
+                            <flux:text variant="muted">
+                                {{ __('Pastikan kamu sudah siap mengikuti tryout ini. Setelah mendaftar, status akan berubah menjadi pending dan timer akan dimulai sesuai jadwal.') }}
+                            </flux:text>
+                        </div>
 
-        @if ($paketKonfirmasi)
-            <div class="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-700">
-                <div class="flex items-start justify-between gap-3">
-                    <div>
-                        <flux:heading size="md">{{ $paketKonfirmasi['nama'] }}</flux:heading>
-                        <flux:text variant="muted" class="mt-1">
-                            {{ $paketKonfirmasi['deskripsi'] }}
-                        </flux:text>
+                        @if ($paketKonfirmasi)
+                            <div class="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-700">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <flux:heading size="md">{{ $paketKonfirmasi['nama'] }}</flux:heading>
+                                        <flux:text variant="muted" class="mt-1">
+                                            {{ $paketKonfirmasi['deskripsi'] }}
+                                        </flux:text>
+                                    </div>
+                                    <flux:badge>
+                                        {{ __('Durasi :menit menit', ['menit' => $paketKonfirmasi['waktu_pengerjaan']]) }}
+                                    </flux:badge>
+                                </div>
+
+                                <div class="mt-4 grid gap-3 text-sm text-zinc-600 dark:text-zinc-300 sm:grid-cols-2">
+                                    <div class="flex items-center gap-2">
+                                        <flux:icon name="currency-dollar" class="size-4" />
+                                        <span>{{ __('Biaya') }}:
+                                            <strong
+                                                class="text-zinc-800 dark:text-white">{{ number_format($paketKonfirmasi['harga'], 0, ',', '.') }}</strong>
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <flux:icon name="shield-check" class="size-4" />
+                                        <span>{{ __('Status Sebelumnya') }}:
+                                            <strong
+                                                class="text-zinc-800 dark:text-white">{{ __($paketKonfirmasi['status'] ?? 'Belum terdaftar') }}</strong>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="flex justify-end gap-3">
+                            <flux:button variant="ghost" wire:click="cancelRegister">
+                                {{ __('Batal') }}
+                            </flux:button>
+
+                            <flux:button icon="sparkles" variant="primary" wire:click="registerConfirmed"
+                                wire:loading.attr="disabled">
+                                {{ __('Ya, Daftarkan Sekarang') }}
+                            </flux:button>
+                        </div>
                     </div>
-                    <flux:badge>{{ __('Durasi :menit menit', ['menit' => $paketKonfirmasi['waktu_pengerjaan']]) }}</flux:badge>
-                </div>
-
-                <div class="mt-4 grid gap-3 text-sm text-zinc-600 dark:text-zinc-300 sm:grid-cols-2">
-                    <div class="flex items-center gap-2">
-                        <flux:icon name="currency-dollar" class="size-4" />
-                        <span>{{ __('Biaya') }}:
-                            <strong class="text-zinc-800 dark:text-white">{{ number_format($paketKonfirmasi['harga'], 0, ',', '.') }}</strong>
-                        </span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <flux:icon name="shield-check" class="size-4" />
-                        <span>{{ __('Status Sebelumnya') }}:
-                            <strong class="text-zinc-800 dark:text-white">{{ __($paketKonfirmasi['status'] ?? 'Belum terdaftar') }}</strong>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        <div class="flex justify-end gap-3">
-            <flux:button variant="ghost" wire:click="cancelRegister">
-                {{ __('Batal') }}
-            </flux:button>
-
-            <flux:button icon="sparkles" variant="primary" wire:click="registerConfirmed" wire:loading.attr="disabled">
-                {{ __('Ya, Daftarkan Sekarang') }}
-            </flux:button>
-        </div>
-    </div>
-</flux:modal>
+                </flux:modal>
             </div>
             <div class="relative w-full max-w-sm self-end md:self-center">
                 <div
@@ -187,17 +192,18 @@
 
                     <div class="mt-6 flex flex-col gap-3">
                         @if ($item['booking_status'] === \App\Models\TryoutBooking::STATUS_ACTIVE)
-                            <flux:button icon="play" block :href="route('peserta.tryout.detail', $item['id'])" wire:navigate>
+                            <flux:button icon="play" block :href="route('peserta.tryout.ujian', $item['booking_id'])" wire:navigate>
                                 {{ __('Mulai Ujian') }}
                             </flux:button>
                         @else
                             <flux:button icon="sparkles" block wire:click="confirmRegister({{ $item['id'] }})"
-                                wire:loading.attr="disabled" :disabled="! $item['can_register']">
+                                wire:loading.attr="disabled" :disabled="!$item['can_register']">
                                 {{ $item['can_register'] ? __('Ikuti Sekarang') : __('Sedang Diproses') }}
                             </flux:button>
                         @endif
 
-                        <flux:button variant="ghost" icon="eye" block :href="route('peserta.tryout.detail', $item['id'])" wire:navigate>
+                        <flux:button variant="ghost" icon="eye" block
+                            :href="route('peserta.tryout.detail', $item['id'])" wire:navigate>
                             {{ __('Lihat Detail Paket') }}
                         </flux:button>
                     </div>
