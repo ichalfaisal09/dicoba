@@ -60,7 +60,7 @@
         <flux:button variant="ghost" icon="arrow-uturn-left" :href="route('peserta.tryout-saya')" wire:navigate>
             {{ __('Kembali ke Tryout Saya') }}
         </flux:button>
-        <flux:button icon="play" variant="primary">
+        <flux:button icon="play" variant="primary" wire:click="startExam" wire:loading.attr="disabled">
             {{ __('Saya Siap Memulai Ujian') }}
         </flux:button>
     </div>

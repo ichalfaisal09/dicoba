@@ -15,17 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('tryout_paket_id')->constrained('tryout_paket')->cascadeOnDelete();
-            $table->string('status')->default('pending');
-            $table->timestamp('tanggal_mulai')->nullable();
-            $table->timestamp('tanggal_selesai')->nullable();
-            $table->unsignedInteger('durasi_menit')->nullable();
+            $table->string('status')->default('active');
             $table->unsignedInteger('harga')->nullable();
             $table->string('kode_pembayaran')->nullable();
             $table->json('metadata')->nullable();
             $table->timestamps();
 
             $table->unique(['user_id', 'tryout_paket_id'], 'tryout_booking_unique_user_paket');
-            $table->index(['status', 'tanggal_mulai']);
+            $table->index(['status']);
         });
     }
 

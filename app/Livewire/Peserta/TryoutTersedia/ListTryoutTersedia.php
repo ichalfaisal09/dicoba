@@ -166,9 +166,9 @@ class ListTryoutTersedia extends Component
 
         $payload = [
             'status' => TryoutBooking::STATUS_ACTIVE,
-            'tanggal_mulai' => null,
-            'tanggal_selesai' => null,
-            'durasi_menit' => null,
+            // 'tanggal_mulai' => null,
+            // 'tanggal_selesai' => null,
+            // 'durasi_menit' => null,
             'harga' => $paket->harga,
             'kode_pembayaran' => sprintf('INV-%s-%s', now()->format('YmdHis'), str_pad((string) $user->id, 4, '0', STR_PAD_LEFT)),
             'metadata' => $existing?->metadata ?? [],
@@ -211,7 +211,7 @@ class ListTryoutTersedia extends Component
         $user = Auth::user();
 
         $bookings = $user?->tryoutBookings()
-            ->get(['id', 'tryout_paket_id', 'status', 'tanggal_mulai', 'tanggal_selesai', 'durasi_menit'])
+            ->get(['id', 'tryout_paket_id', 'status'])
             ->keyBy('tryout_paket_id');
 
         $paketCollection = TryoutPaket::query()
@@ -222,19 +222,13 @@ class ListTryoutTersedia extends Component
             ->map(function (TryoutPaket $paket) use ($bookings) {
                 $booking = $bookings->get($paket->id);
                 $status = $booking?->status;
+                $isActive = $status === TryoutBooking::STATUS_ACTIVE;
 
-                $statusLabel = match ($status) {
-                    TryoutBooking::STATUS_PENDING => __('Menunggu konfirmasi'),
-                    TryoutBooking::STATUS_ACTIVE => __('Sedang kamu ikuti'),
-                    TryoutBooking::STATUS_COMPLETED => __('Telah selesai'),
-                    TryoutBooking::STATUS_EXPIRED => __('Kedaluwarsa'),
-                    default => __('Belum terdaftar'),
-                };
+                $statusLabel = $isActive
+                    ? __('Terdaftar')
+                    : __('Tidak terdaftar');
 
-                $canRegister = ! in_array($status, [
-                    TryoutBooking::STATUS_PENDING,
-                    TryoutBooking::STATUS_ACTIVE,
-                ], true);
+                $canRegister = ! $isActive;
 
                 return [
                     'id' => $paket->id,
@@ -244,19 +238,13 @@ class ListTryoutTersedia extends Component
                     'harga' => $paket->harga,
                     'waktu_pengerjaan' => $paket->waktu_pengerjaan,
                     'booking_status' => $status,
-                    'booking_mulai' => optional($booking?->tanggal_mulai)->translatedFormat('d M Y, H:i'),
-                    'booking_selesai' => optional($booking?->tanggal_selesai)->translatedFormat('d M Y, H:i'),
-                    'durasi_menit' => $booking?->durasi_menit ?? $paket->waktu_pengerjaan,
+                    'booking_mulai' => null,
+                    'booking_selesai' => null,
+                    'durasi_menit' => $paket->waktu_pengerjaan,
                     'bookings_count' => $paket->bookings_count,
                     'status_label' => $statusLabel,
                     'can_register' => $canRegister,
-                    'badge' => match ($status) {
-                        TryoutBooking::STATUS_ACTIVE => 'success',
-                        TryoutBooking::STATUS_COMPLETED => 'info',
-                        TryoutBooking::STATUS_PENDING => 'warning',
-                        TryoutBooking::STATUS_EXPIRED => 'danger',
-                        default => 'neutral',
-                    },
+                    'badge' => $isActive ? 'success' : 'neutral',
                 ];
             })
             ->values();
