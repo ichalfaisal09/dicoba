@@ -29,7 +29,7 @@ class GeneratorJson extends Component
     public function render()
     {
         $variasi = KategoriVariasi::query()
-            ->whereHas('materi.subtes', fn($query) => $query->where('kode', 'TIU'))
+            ->whereHas('materi.subtes', fn($query) => $query->where('kode', 'TWK'))
             ->with('materi:id,nama')
             ->orderBy(
                 KategoriVariasi::query()
