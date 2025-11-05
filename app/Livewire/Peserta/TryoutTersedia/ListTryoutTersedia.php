@@ -116,7 +116,7 @@ class ListTryoutTersedia extends Component
         $this->paketKonfirmasi = [];
     }
 
-    public function register(int $paketId): void
+    public function register(int $paketId)
     {
         $user = Auth::user();
 
@@ -189,6 +189,8 @@ class ListTryoutTersedia extends Component
                 'heading' => __('Pendaftaran tryout berhasil'),
                 'text' => __('Kami sudah mencatat pendaftaran kamu pada paket :nama.', ['nama' => $paket->nama]),
             ]);
+
+            return $this->redirectRoute('peserta.tryout-saya');
         } catch (Throwable $throwable) {
             report($throwable);
 

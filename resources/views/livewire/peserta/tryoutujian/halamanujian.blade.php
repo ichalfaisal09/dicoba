@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="space-y-6 cursor-pointer">
     <div class="flex items-center justify-between">
         <div>
             <flux:heading size="xl">
@@ -22,10 +22,8 @@
                         </span>
                     </div>
                     <div class="h-2 w-48 rounded-full bg-zinc-200">
-                        <div
-                            class="h-2 rounded-full bg-indigo-500 transition-all"
-                            style="width: {{ max(0, min(100, $countdownPercentage)) }}%;"
-                        ></div>
+                        <div class="h-2 rounded-full bg-indigo-500 transition-all"
+                            style="width: {{ max(0, min(100, $countdownPercentage)) }}%;"></div>
                     </div>
                 </div>
             @endif
@@ -155,25 +153,33 @@
                 </flux:card>
 
                 @if ($confirmSubmit)
-                    <flux:card variant="warning" class="space-y-3">
-                        <flux:heading size="md">{{ __('Masih ada soal ditandai ragu') }}</flux:heading>
-                        <flux:text>
-                            {{ __('Kamu masih memiliki soal yang ditandai ragu. Yakin ingin mengirim jawaban sekarang?') }}
-                        </flux:text>
+                    <flux:card variant="warning" class="space-y-4">
+                        <flux:heading size="md">{{ __('Konfirmasi Pengiriman Jawaban') }}</flux:heading>
+                        <div class="space-y-2 text-sm text-zinc-700">
+                            <p>{{ __('Pastikan kamu sudah memeriksa seluruh jawaban sebelum dikirim.') }}</p>
+                            @if ($confirmUnansweredCount > 0)
+                                <p>
+                                    {{ trans_choice(':count soal belum dijawab.', $confirmUnansweredCount, ['count' => $confirmUnansweredCount]) }}
+                                </p>
+                            @endif
+                            @if ($confirmFlaggedCount > 0)
+                                <p>
+                                    {{ trans_choice(':count soal masih ditandai ragu.', $confirmFlaggedCount, ['count' => $confirmFlaggedCount]) }}
+                                </p>
+                            @endif
+                        </div>
                         <div class="flex gap-2">
-                            <flux:button variant="outline" wire:click="cancelConfirmSubmit"
-                                wire:loading.attr="disabled">
+                            <flux:button variant="outline" wire:click="cancelConfirmSubmit" wire:loading.attr="disabled">
                                 {{ __('Periksa Lagi') }}
                             </flux:button>
-                            <flux:button color="danger" icon="check" wire:click="submitExam"
-                                wire:loading.attr="disabled">
-                                {{ __('Tetap Kirim') }}
+                            <flux:button color="danger" icon="check" wire:click="submitExam" wire:loading.attr="disabled">
+                                {{ __('Kirim Sekarang') }}
                             </flux:button>
                         </div>
                     </flux:card>
                 @endif
 
-                <flux:card class="space-y-3">
+                {{-- <flux:card class="space-y-3">
                     <flux:heading size="md">{{ __('Catatan') }}</flux:heading>
                     <flux:text variant="muted">
                         {{ __('Isi konten soal, navigasi, dan logika penyimpanan sesuai kebutuhan. Struktur ini disiapkan sebagai kerangka awal.') }}
@@ -193,7 +199,7 @@
                             style="width: {{ max(0, min(100, $countdownPercentage)) }}%;"
                         ></div>
                     </div>
-                </flux:card>
+                </flux:card> --}}
             </div>
         </div>
     @endif
@@ -263,13 +269,10 @@
                                 default => 'background-color: #fff; border-color: #e5e7eb; color: #3f3f46;',
                             };
                         @endphp
-                        <button
-                            type="button"
+                        <button type="button"
                             class="flex h-10 items-center justify-center rounded-lg border text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                            style="{{ $buttonStyle }}"
-                            wire:key="grid-question-{{ $id }}"
-                            wire:click="jumpToQuestion({{ $index }})"
-                            wire:loading.attr="disabled">
+                            style="{{ $buttonStyle }}" wire:key="grid-question-{{ $id }}"
+                            wire:click="jumpToQuestion({{ $index }})" wire:loading.attr="disabled">
                             {{ $index + 1 }}
                         </button>
                     @endforeach

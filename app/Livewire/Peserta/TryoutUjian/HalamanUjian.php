@@ -60,6 +60,10 @@ class HalamanUjian extends Component
 
     public float $countdownPercentage = 0.0;
 
+    public int $confirmFlaggedCount = 0;
+
+    public int $confirmUnansweredCount = 0;
+
     public function mount(int $bookingId): void
     {
         abort_unless(Auth::check(), 401);
@@ -210,24 +214,40 @@ class HalamanUjian extends Component
         }
 
         $flags = collect($this->metadata['flags'] ?? [])->filter()->count();
+        $unanswered = max(0, $this->totalQuestions - $this->answeredCount);
 
-        if ($flags > 0 && ! $this->confirmSubmit && ! $force) {
+        if (! $force && ! $this->confirmSubmit) {
+            $this->confirmFlaggedCount = $flags;
+            $this->confirmUnansweredCount = $unanswered;
             $this->confirmSubmit = true;
 
             return;
         }
 
         $this->confirmSubmit = false;
+        $this->confirmFlaggedCount = 0;
+        $this->confirmUnansweredCount = 0;
 
-        $totalSkor = (float) $this->session->answers()->sum('skor');
+        $answers = $this->session->answers()->get();
+        $totalSkor = (float) $answers->sum('skor');
+        $jawabanTerjawab = $answers->whereNotNull('jawaban_opsi_id')->count();
+        $jawabanBenar = $answers->filter(fn ($answer) => ($answer->skor ?? 0) > 0)->count();
+        $jawabanSalah = $jawabanTerjawab - $jawabanBenar;
+        $jawabanKosong = max(0, ($this->metadata['total_questions'] ?? $this->totalQuestions) - $jawabanTerjawab);
 
         $metadata = $this->metadata;
         $metadata['submitted_at'] = now()->toDateTimeString();
         $metadata['total_score'] = $totalSkor;
         $metadata['remaining_seconds'] = max(0, $this->remainingSeconds);
         $metadata['last_synced_at'] = now()->toDateTimeString();
+        $metadata['total_questions'] = $metadata['total_questions'] ?? $this->totalQuestions;
+        $metadata['summary'] = [
+            'correct' => $jawabanBenar,
+            'incorrect' => $jawabanSalah,
+            'unanswered' => $jawabanKosong,
+        ];
 
-        DB::transaction(function () use ($metadata) {
+        DB::transaction(function () use ($metadata, $jawabanBenar, $jawabanSalah, $jawabanKosong, $totalSkor) {
             $this->session->update([
                 'metadata' => $metadata,
                 'status' => TryoutSession::STATUS_SUBMITTED,
@@ -236,6 +256,18 @@ class HalamanUjian extends Component
             ]);
 
             $this->session->refresh();
+
+            $bookingMetadata = $this->booking->metadata ?? [];
+            $bookingMetadata['skor_total'] = $totalSkor;
+            $bookingMetadata['jawaban_benar'] = $jawabanBenar;
+            $bookingMetadata['jawaban_salah'] = $jawabanSalah;
+            $bookingMetadata['jawaban_kosong'] = $jawabanKosong;
+            $bookingMetadata['terakhir_submit'] = now()->toDateTimeString();
+
+            $this->booking->update([
+                'status' => TryoutBooking::STATUS_COMPLETED,
+                'metadata' => $bookingMetadata,
+            ]);
         });
 
         $this->booking->refresh();

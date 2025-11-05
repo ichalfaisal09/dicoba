@@ -23,9 +23,18 @@
             </flux:card>
 
             <flux:card class="bg-emerald-50/80 p-4 text-emerald-900 dark:bg-emerald-500/10 dark:text-emerald-200">
-                <flux:heading size="sm">{{ __('Peringkat') }}</flux:heading>
+                <flux:heading size="sm">{{ __('Status Kelulusan') }}</flux:heading>
+                @php
+                    $statusKelulusan = $detail['passing_grade']['status'] ?? null;
+                @endphp
                 <p class="mt-2 text-2xl font-semibold">
-                    {{ $detail['peringkat'] ?? __('Belum tersedia') }}
+                    @if ($statusKelulusan === true)
+                        {{ __('Lulus') }}
+                    @elseif ($statusKelulusan === false)
+                        {{ __('Tidak Lulus') }}
+                    @else
+                        {{ __('Belum tersedia') }}
+                    @endif
                 </p>
             </flux:card>
 
@@ -43,6 +52,32 @@
                 </p>
             </flux:card>
         </div>
+
+        @if (!empty($detail['passing_grade']['total']) || !empty($detail['passing_grade']['by_subtests']))
+            <div class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
+                <flux:heading size="md">{{ __('Passing Grade') }}</flux:heading>
+                <div class="mt-3 space-y-2 text-sm text-zinc-600 dark:text-zinc-300">
+                    @if (!empty($detail['passing_grade']['total']))
+                        <p>
+                            {{ __('Total Passing Grade: :nilai', ['nilai' => $detail['passing_grade']['total']]) }}
+                        </p>
+                    @endif
+
+                    @if (!empty($detail['passing_grade']['by_subtests']))
+                        <div class="space-y-1">
+                            <p>{{ __('Rincian per Subtes:') }}</p>
+                            <ul class="list-disc pl-5">
+                                @foreach ($detail['passing_grade']['by_subtests'] as $subtes)
+                                    <li>
+                                        {{ $subtes['nama'] }} — {{ __('Minimal') }}: {{ $subtes['nilai_minimal'] }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
 
         <div class="flex gap-3">
             <flux:button icon="arrow-uturn-left" :href="route('peserta.tryout-saya')" wire:navigate>
