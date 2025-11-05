@@ -125,8 +125,9 @@ class Create extends Component
 
         $lastNumber = KategoriVariasi::withTrashed()
             ->where('kode', 'like', $prefix . '-%')
-            ->selectRaw("MAX(CAST(SUBSTRING_INDEX(kode, '-', -1) AS UNSIGNED)) as max_number")
-            ->value('max_number');
+            ->pluck('kode')
+            ->map(fn (string $kode) => (int) Str::afterLast($kode, '-'))
+            ->max();
 
         $next = $lastNumber ? $lastNumber + 1 : 1;
 
